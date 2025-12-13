@@ -1,0 +1,10 @@
+{
+  "$schema": "https://anthropic.com/claude-code/hooks.schema.json",
+  "hooks": [
+    {
+      "event": "SessionStart",
+      "command": ["bash", "./hooks/check-setup.sh"],
+      "runInBackground": true
+    }
+  ]
+}

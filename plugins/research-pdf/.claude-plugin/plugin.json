@@ -6,8 +6,8 @@
     "name": "Jonathan Tsai",
     "url": "https://github.com/jontsai"
   },
-  "repository": "https://github.com/jontsai/research-pdf-plugin",
-  "homepage": "https://github.com/jontsai/research-pdf-plugin#readme",
+  "repository": "https://github.com/jontsai/claude-plugins",
+  "homepage": "https://github.com/jontsai/claude-plugins/tree/main/plugins/research-pdf#readme",
   "license": "MIT",
   "keywords": [
     "research",
@@ -18,5 +18,6 @@
     "html",
     "typography",
     "documentation"
-  ]
+  ],
+  "hooks": "./hooks/hooks.json"
 }
