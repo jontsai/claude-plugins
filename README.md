@@ -13,12 +13,12 @@ Curated Claude Code plugins for research, productivity, and development workflow
 /plugin marketplace add jontsai/claude-plugins
 
 # Install a plugin (example)
-/plugin install research-pdf@jontsai-claude-plugins
+/plugin install research-pdf@jontsai
 ```
 
 **Syntax:**
 ```
-/plugin install <plugin-name>@jontsai-claude-plugins
+/plugin install <plugin-name>@jontsai
 ```
 
 ## Available Plugins
@@ -38,7 +38,7 @@ Create professional, visually striking research documents that avoid generic "AI
 - Makefile for easy setup
 
 ```bash
-/plugin install research-pdf@jontsai-claude-plugins
+/plugin install research-pdf@jontsai
 ```
 
 ## Categories

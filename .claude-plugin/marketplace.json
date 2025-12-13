@@ -1,6 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "jontsai-claude-plugins",
+  "name": "jontsai",
   "version": "1.0.0",
   "description": "Curated Claude Code plugins for research, productivity, and development workflows",
   "owner": {

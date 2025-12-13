@@ -18,7 +18,7 @@ A Claude Code plugin for creating distinctive, memorable HTML one-pagers that co
 
 ```bash
 /plugin marketplace add jontsai/claude-plugins
-/plugin install research-pdf@jontsai-claude-plugins
+/plugin install research-pdf@jontsai
 ```
 
 ### Setup
