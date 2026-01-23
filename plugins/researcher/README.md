@@ -1,6 +1,6 @@
-# research-pdf
+# Researcher
 
-A Claude Code plugin for creating distinctive, memorable HTML one-pagers that convert to beautiful PDFs.
+A Claude Code plugin for creating distinctive, memorable research documents in HTML or Markdown.
 
 **Say goodbye to generic AI design.** This skill provides curated aesthetic presets that produce professional, visually striking documents.
 
@@ -8,17 +8,18 @@ A Claude Code plugin for creating distinctive, memorable HTML one-pagers that co
 
 ## Features
 
+- **Dual Output Modes** - HTML (styled) or Markdown (plaintext)
 - **5 Curated Aesthetics** - Terminal, Editorial, Corporate, Industrial, Fresh
 - **Anti-AI-Slop Design** - Intentional typography, textures, micro-interactions
 - **Cross-Platform** - Works on macOS, Linux, and Windows (WSL)
 - **Print-Ready** - Optimized for Letter-size PDF output
-- **Zero Dependencies** - Just needs a Chromium-based browser
+- **Zero Dependencies** - Just needs a Chromium-based browser (for HTML/PDF)
 
 ## Installation
 
 ```bash
 /plugin marketplace add jontsai/claude-plugins
-/plugin install research-pdf@jontsai
+/plugin install researcher@jontsai
 ```
 
 ### Setup
@@ -26,7 +27,7 @@ A Claude Code plugin for creating distinctive, memorable HTML one-pagers that co
 After installation, run the setup:
 
 ```bash
-cd ~/.claude/plugins/cache/jontsai/claude-plugins/plugins/research-pdf
+cd ~/.claude/plugins/cache/jontsai/claude-plugins/plugins/researcher
 make install
 make install-alias  # Optional: adds 'rpdf' command
 ```
@@ -67,14 +68,16 @@ Make a one-pager comparing React vs Vue vs Svelte
 ## Directory Structure
 
 ```
-$RESEARCH_PDF_DIR/
-├── html/                    # Your HTML source files
+$RESEARCHER_DIR/
+├── html/                    # HTML source files (styled)
 │   ├── k9s-cheatsheet-20251209.html
 │   └── sushi-guide-20251210.html
+├── md/                      # Markdown source files (plaintext)
+│   └── quick-notes-20251211.md
 ├── pdf/                     # Generated PDFs
 │   ├── k9s-cheatsheet-20251209.pdf
 │   └── sushi-guide-20251210.pdf
-└── generate-pdfs.sh         # Conversion script
+└── generate-pdfs.sh         # HTML → PDF conversion script
 ```
 
 ## PDF Generation
@@ -83,13 +86,13 @@ Generate PDFs from all HTML files:
 
 ```bash
 # Generate new PDFs only
-$RESEARCH_PDF_DIR/generate-pdfs.sh
+$RESEARCHER_DIR/generate-pdfs.sh
 
 # Force regenerate all PDFs
-$RESEARCH_PDF_DIR/generate-pdfs.sh --force
+$RESEARCHER_DIR/generate-pdfs.sh --force
 
 # Show help
-$RESEARCH_PDF_DIR/generate-pdfs.sh --help
+$RESEARCHER_DIR/generate-pdfs.sh --help
 ```
 
 ## Design Philosophy
@@ -116,7 +119,7 @@ This plugin deliberately avoids "AI slop" - the generic, forgettable design patt
 | Target | Description |
 |--------|-------------|
 | `make install` | Create directories and install generation script |
-| `make install-alias` | Add `RESEARCH_PDF_DIR` and `rpdf` alias to shell profile |
+| `make install-alias` | Add `RESEARCHER_DIR` and `rpdf` alias to shell profile |
 | `make uninstall` | Remove installed script (preserves your HTML/PDF files) |
 | `make check-browser` | Verify a compatible browser is installed |
 | `make help` | Show all available targets |
@@ -125,7 +128,7 @@ This plugin deliberately avoids "AI slop" - the generic, forgettable design patt
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `RESEARCH_PDF_DIR` | `~/research-pdfs` | Base directory for HTML and PDF files |
+| `RESEARCHER_DIR` | `~/research` | Base directory for HTML and PDF files |
 
 ### Shell Alias
 

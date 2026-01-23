@@ -13,7 +13,7 @@ Curated Claude Code plugins for research, productivity, and development workflow
 /plugin marketplace add jontsai/claude-plugins
 
 # Install a plugin (example)
-/plugin install research-pdf@jontsai
+/plugin install researcher@jontsai
 ```
 
 **Syntax:**
@@ -25,9 +25,9 @@ Curated Claude Code plugins for research, productivity, and development workflow
 
 | Plugin | Category | Description |
 |--------|----------|-------------|
-| [`research-pdf`](https://github.com/jontsai/research-pdf-plugin) | Productivity | Create distinctive HTML one-pagers with curated aesthetics, convert to PDF |
+| [`researcher`](./plugins/researcher/) | Productivity | Create distinctive HTML one-pagers with curated aesthetics, convert to PDF |
 
-### research-pdf
+### researcher
 
 Create professional, visually striking research documents that avoid generic "AI slop" aesthetics.
 
@@ -38,7 +38,7 @@ Create professional, visually striking research documents that avoid generic "AI
 - Makefile for easy setup
 
 ```bash
-/plugin install research-pdf@jontsai
+/plugin install researcher@jontsai
 ```
 
 ## Categories

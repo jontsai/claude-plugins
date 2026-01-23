@@ -1,0 +1,9 @@
+{
+  "name": "researcher",
+  "description": "Create distinctive HTML one-pagers with curated aesthetics, converts to PDF",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jonathan Tsai",
+    "email": "jontsai@jontsai.org"
+  }
+}

@@ -2,7 +2,7 @@
 #
 # generate-pdfs.sh
 # Converts HTML files to PDF using Chrome/Brave headless mode
-# Part of the research-pdf plugin for Claude Code
+# Part of the researcher plugin for Claude Code
 #
 # Usage:
 #   generate-pdfs.sh [options]
@@ -19,10 +19,10 @@ set -e
 # Configuration
 # ============================================
 
-# Use environment variable or default to ~/research-pdfs
-RESEARCH_PDF_DIR="${RESEARCH_PDF_DIR:-$HOME/research-pdfs}"
-HTML_DIR="$RESEARCH_PDF_DIR/html"
-PDF_DIR="$RESEARCH_PDF_DIR/pdf"
+# Use environment variable or default to ~/research
+RESEARCHER_DIR="${RESEARCHER_DIR:-$HOME/researcher}"
+HTML_DIR="$RESEARCHER_DIR/html"
+PDF_DIR="$RESEARCHER_DIR/pdf"
 
 # ============================================
 # Browser Detection (Cross-platform)
@@ -82,7 +82,7 @@ find_browser() {
 
 show_help() {
     cat << 'EOF'
-research-pdf: Generate PDFs from HTML files
+@jontsai/researcher: Generate PDFs from HTML files
 
 USAGE:
     generate-pdfs.sh [OPTIONS]
@@ -93,8 +93,8 @@ OPTIONS:
     --setup         Create directory structure and show setup instructions
 
 ENVIRONMENT:
-    RESEARCH_PDF_DIR    Base directory for HTML and PDF files
-                        Default: ~/research-pdfs
+    RESEARCHER_DIR    Base directory for HTML and PDF files
+                        Default: ~/research
 
 EXAMPLES:
     # Generate PDFs for new HTML files only
@@ -104,12 +104,15 @@ EXAMPLES:
     generate-pdfs.sh --force
 
     # Use a custom directory
-    RESEARCH_PDF_DIR=/path/to/docs generate-pdfs.sh
+    RESEARCHER_DIR=/path/to/docs generate-pdfs.sh
 
 DIRECTORY STRUCTURE:
-    $RESEARCH_PDF_DIR/
+    $RESEARCHER_DIR/
     ├── html/           # Place your HTML files here
     └── pdf/            # Generated PDFs appear here
+
+Claude Code plugin by @jontsai
+https://github.com/jontsai/claude-plugins
 
 EOF
 }
@@ -117,7 +120,7 @@ EOF
 setup_directories() {
     echo "📁 Setting up research-pdf directories..."
     echo ""
-    echo "   Base directory: $RESEARCH_PDF_DIR"
+    echo "   Base directory: $RESEARCHER_DIR"
 
     mkdir -p "$HTML_DIR" "$PDF_DIR"
 
@@ -129,16 +132,16 @@ setup_directories() {
     echo ""
     echo "1. Add this to your shell profile (~/.zshrc or ~/.bashrc):"
     echo ""
-    echo "   export RESEARCH_PDF_DIR=\"$RESEARCH_PDF_DIR\""
+    echo "   export RESEARCHER_DIR=\"$RESEARCHER_DIR\""
     echo ""
     echo "2. Optionally create an alias:"
     echo ""
-    echo "   alias research-pdf-generate=\"\$RESEARCH_PDF_DIR/generate-pdfs.sh\""
+    echo "   alias research-pdf-generate=\"\$RESEARCHER_DIR/generate-pdfs.sh\""
     echo ""
     echo "3. Copy this script to your research directory:"
     echo ""
-    echo "   cp generate-pdfs.sh \"\$RESEARCH_PDF_DIR/\""
-    echo "   chmod +x \"\$RESEARCH_PDF_DIR/generate-pdfs.sh\""
+    echo "   cp generate-pdfs.sh \"\$RESEARCHER_DIR/\""
+    echo "   chmod +x \"\$RESEARCHER_DIR/generate-pdfs.sh\""
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 }

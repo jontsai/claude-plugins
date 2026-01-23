@@ -6,7 +6,7 @@ This directory contains all available plugins in the @jontsai marketplace.
 
 | Plugin | Description |
 |--------|-------------|
-| [research-pdf](./research-pdf/) | Create distinctive HTML one-pagers with curated aesthetics, convert to PDF |
+| [researcher](./researcher/) | Create distinctive HTML one-pagers with curated aesthetics, convert to PDF |
 
 ## Plugin Structure
 

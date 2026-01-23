@@ -1,0 +1,6 @@
+# Local Claude Code settings
+**/.claude/settings.json
+**/.claude/settings.local.json
+
+# Keep directory structure
+!**/.claude/.keep

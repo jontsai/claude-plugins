@@ -1,7 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "jontsai",
-  "version": "1.0.0",
   "description": "Curated Claude Code plugins for research, productivity, and development workflows",
   "owner": {
     "name": "Jonathan Tsai",
@@ -10,15 +9,16 @@
   },
   "plugins": [
     {
-      "name": "research-pdf",
-      "description": "Create distinctive HTML one-pagers with curated aesthetics (Terminal, Editorial, Corporate, Industrial, Fresh), then convert to PDF. Anti-AI-slop design philosophy.",
+      "name": "researcher",
+      "description": "Create distinctive HTML one-pagers with curated aesthetics, converts to PDF. Anti-AI-slop design.",
       "version": "1.0.0",
       "author": {
         "name": "Jonathan Tsai",
         "email": "jontsai@jontsai.org"
       },
-      "source": "./plugins/research-pdf",
-      "category": "productivity"
+      "source": "./plugins/researcher",
+      "category": "productivity",
+      "homepage": "https://github.com/jontsai/claude-plugins/tree/main/plugins/researcher"
     }
   ]
 }
