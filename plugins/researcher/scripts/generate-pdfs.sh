@@ -20,7 +20,7 @@ set -e
 # ============================================
 
 # Use environment variable or default to ~/research
-RESEARCHER_DIR="${RESEARCHER_DIR:-$HOME/researcher}"
+RESEARCHER_DIR="${RESEARCHER_DIR:-$HOME/research}"
 HTML_DIR="$RESEARCHER_DIR/html"
 PDF_DIR="$RESEARCHER_DIR/pdf"
 

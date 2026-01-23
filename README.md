@@ -1,58 +1,53 @@
 # @jontsai Claude Code Plugins
 
-![Claude Code](https://img.shields.io/badge/Claude%20Code-Plugins-blueviolet?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
-![Plugins](https://img.shields.io/badge/Plugins-1-blue?style=flat-square)
+[![Validate](https://github.com/jontsai/claude-plugins/actions/workflows/validate.yml/badge.svg)](https://github.com/jontsai/claude-plugins/actions/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Curated Claude Code plugins for research, productivity, and development workflows.
 
-## Installation
+## Quick Start
 
 ```bash
-# Add this marketplace (one time)
+# Add marketplace (one time)
 /plugin marketplace add jontsai/claude-plugins
 
-# Install a plugin (example)
+# Install a plugin
 /plugin install researcher@jontsai
-```
-
-**Syntax:**
-```
-/plugin install <plugin-name>@jontsai
 ```
 
 ## Available Plugins
 
 | Plugin | Category | Description |
 |--------|----------|-------------|
-| [`researcher`](./plugins/researcher/) | Productivity | Create distinctive HTML one-pagers with curated aesthetics, convert to PDF |
+| [researcher](./plugins/researcher/) | Productivity | Create distinctive HTML/Markdown one-pagers with curated aesthetics, convert to PDF |
 
 ### researcher
 
 Create professional, visually striking research documents that avoid generic "AI slop" aesthetics.
 
-**Features:**
-- 5 curated aesthetic presets (Terminal, Editorial, Corporate, Industrial, Fresh)
-- Cross-platform PDF generation via headless Chromium
-- Print-optimized layouts with micro-interactions
-- Makefile for easy setup
+- **5 aesthetic presets:** Terminal, Editorial, Corporate, Industrial, Fresh
+- **Dual output:** HTML (styled) or Markdown (plaintext)
+- **Cross-platform:** macOS, Linux, Windows (WSL)
+- **PDF generation:** via headless Chromium
 
 ```bash
 /plugin install researcher@jontsai
 ```
 
-## Categories
+## Documentation
 
-| Category | Description |
-|----------|-------------|
-| `productivity` | Tools for research, documentation, and workflow automation |
-| `development` | Developer tools, code generation, and IDE enhancements |
-| `learning` | Educational tools and interactive learning experiences |
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - How to contribute
+- [TESTING.md](./TESTING.md) - Validation and testing
+- [AGENTS.md](./AGENTS.md) - Guidelines for LLMs
+
+## Contributing
+
+Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
 ## License
 
-MIT License - see individual plugin repositories for details.
+[MIT](LICENSE)
 
-## Author
+---
 
-**Jonathan Tsai** · [GitHub](https://github.com/jontsai) · [Website](https://jontsai.org)
+Created by [Jonathan Tsai](https://github.com/jontsai)
