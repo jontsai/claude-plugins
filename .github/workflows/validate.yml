@@ -1,0 +1,32 @@
+name: Validate Plugin Structure
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON syntax
+        run: python3 scripts/validate_json.py
+
+      - name: Validate marketplace and plugin structure
+        run: python3 scripts/validate_marketplace.py
+
+      - name: Validate SKILL.md frontmatter
+        run: python3 scripts/validate_skills.py
+
+      - name: Validate hooks.json format
+        run: python3 scripts/validate_hooks.py
+
+      - name: Summary
+        run: |
+          echo ""
+          echo "========================================"
+          echo "  All validations passed!"
+          echo "========================================"

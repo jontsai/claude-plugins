@@ -17,7 +17,7 @@ Before using this skill, configure your output directory:
 
 ```bash
 # Add to your shell profile (~/.zshrc or ~/.bashrc)
-export RESEARCHER_DIR="$HOME/researcher"
+export RESEARCHER_DIR="$HOME/research"
 
 # Create the directory structure
 mkdir -p "$RESEARCHER_DIR/html" "$RESEARCHER_DIR/md" "$RESEARCHER_DIR/pdf"
