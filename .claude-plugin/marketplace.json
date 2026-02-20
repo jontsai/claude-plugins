@@ -19,6 +19,18 @@
       "source": "./plugins/researcher",
       "category": "productivity",
       "homepage": "https://github.com/jontsai/claude-plugins/tree/main/plugins/researcher"
+    },
+    {
+      "name": "review-pr",
+      "description": "Generate guided PR review tours with logical file ordering, context, and review priorities. Supports approval workflow with semantic messages.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Jonathan Tsai",
+        "email": "hello@jontsai.com"
+      },
+      "source": "./plugins/review-pr",
+      "category": "development",
+      "homepage": "https://github.com/jontsai/claude-plugins/tree/main/plugins/review-pr"
     }
   ]
 }
