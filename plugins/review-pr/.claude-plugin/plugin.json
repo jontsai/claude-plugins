@@ -1,0 +1,9 @@
+{
+  "name": "review-pr",
+  "description": "Generate guided PR review tours with logical file ordering, context, and review priorities",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jonathan Tsai",
+    "email": "hello@jontsai.com"
+  }
+}
