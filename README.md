@@ -20,6 +20,7 @@ Curated Claude Code plugins for research, productivity, and development workflow
 | Plugin | Category | Description |
 |--------|----------|-------------|
 | [researcher](./plugins/researcher/) | Productivity | Create distinctive HTML/Markdown one-pagers with curated aesthetics, convert to PDF |
+| [review-pr](./plugins/review-pr/) | Development | Generate guided PR review tours that walk through code changes in logical order |
 
 ### researcher
 
@@ -32,6 +33,19 @@ Create professional, visually striking research documents that avoid generic "AI
 
 ```bash
 /plugin install researcher@jontsai
+```
+
+### review-pr
+
+Generate guided PR review tours that walk through code changes in logical order.
+
+- **Logical ordering:** Depth-first traversal matching GitHub UI
+- **Context-rich:** Explains why code exists and its history
+- **Approval workflow:** Review and approve with semantic messages (LGTM/LFTM)
+- **Smart posting:** Confidence-based inline PR comments
+
+```bash
+/plugin install review-pr@jontsai
 ```
 
 ## Documentation
