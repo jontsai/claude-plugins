@@ -22,8 +22,8 @@
     },
     {
       "name": "review-pr",
-      "description": "Generate guided PR review tours with logical file ordering, context, and review priorities. Supports approval workflow with semantic messages.",
-      "version": "1.0.0",
+      "description": "Review PRs in a Tour Guide (expository) or Adversarial (audit) posture, with logical file ordering, context, and severity-rated findings. Forge-agnostic (GitHub + Bitbucket). Supports approval workflow with semantic messages.",
+      "version": "1.1.0",
       "author": {
         "name": "Jonathan Tsai",
         "email": "hello@jontsai.com"
