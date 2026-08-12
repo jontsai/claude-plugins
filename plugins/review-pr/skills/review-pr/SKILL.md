@@ -1,9 +1,12 @@
 ---
 name: review-pr
 description: |
-  Generate a guided PR review tour that walks through code changes in logical order.
-  Creates a "street guide" with landmarks, context, and review priorities.
-  Triggers: "review PR #123", "walk me through this PR", "PR tour guide", "explain this PR", "review and approve".
+  Review a Pull Request in one of two postures: an expository "tour guide" that walks
+  through changes in logical order, or an adversarial audit that assumes the change is
+  wrong until proven safe and hunts for the failure mode.
+  Triggers: "review PR #123", "adversarial review", "walk me through this PR", "PR tour guide",
+  "explain this PR", "review and approve", "what breaks in this PR".
+  Forge-agnostic review logic; posts inline comments via gh (GitHub) or the Bitbucket poster.
   Supports CLI display, PR comments, and human-style inline reviews. Can approve PRs with semantic messages.
 ---
 
@@ -15,11 +18,23 @@ Generate a structured, guided tour of a Pull Request that helps reviewers unders
 
 Claude will invoke this skill when you:
 - Ask to "review PR #123" or "review this PR"
+- Ask for an "adversarial review" or "what breaks in this PR" (triggers Adversarial Review posture)
 - Say "walk me through this PR"
 - Request "PR tour guide" or "explain this PR"
 - Ask "what should I look for in this PR"
 - Say "create a PR review walkthrough"
 - Request "review and approve PR #123" (triggers review with approval workflow)
+
+## Two Review Postures
+
+This skill operates in one of two postures. Choose before starting; when unsure, ask.
+
+| Posture | Question it answers | Default for |
+|---------|--------------------|-------------|
+| **Tour Guide** (expository) | "What does this PR do and where should I look?" | Onboarding, explaining a change, "walk me through" requests |
+| **Adversarial** (audit) | "What's the worst thing this PR does that the author didn't mention, and is it provably safe?" | Correctness-sensitive changes, "review and approve", anything touching data integrity / auth / migrations / money |
+
+The two share the same mechanics (fetch diff, order files, post comments). They differ in **stance**: Tour Guide explains and orients; Adversarial assumes the change is wrong until proven otherwise. Default to **Adversarial** whenever the PR touches data integrity, authorization, tenant isolation, schema/migrations, billing, or concurrency — and always when the user asks you to approve.
 
 ## Overview
 
@@ -29,6 +44,65 @@ This skill creates a guided tour of PR changes that:
 - **Provides context** about why code exists and its history
 - **Highlights review priorities** (what needs rigorous review vs. rubber-stamp)
 - **Uses landmarks** (line numbers, class/function names) for easy navigation
+
+## Adversarial Review
+
+Use this posture for correctness-sensitive PRs and whenever you're asked to approve. The
+deliverable is **the failure mode, not the walkthrough**. Assume the change is wrong until
+you have proven it safe.
+
+### Stance
+
+- Assume the diff is broken and your job is to show *how*. A clean-looking diff is not evidence of correctness.
+- The absence of a finding is a claim you must earn by actively trying to break the change — not a default.
+- Neutral **tone**, honest **severity**. Do not soften a data-integrity bug into a "consideration." Name the worst plausible consequence plainly.
+
+### Step A — Verify the PR's claims
+
+Every assertion in the PR description is a hypothesis to test against the code, not a fact.
+For each claim ("no impact on normal traffic", "visible only to that client", "returns in
+ms", "safe by default"), either:
+
+- **Verify it** by reading the code that would make it true (and cite where), or
+- **Mark it UNVERIFIED** in the review.
+
+A claim you cannot tie to code is a finding.
+
+### Step B — Trace beyond the diff
+
+The diff is where the change is; the bugs are often where it *lands*. Do not review only
+changed lines.
+
+- Follow every changed function/symbol to its **call sites**.
+- Follow every changed table/query to the **read paths** and **schema/constraints** (NOT NULL, FKs, uniqueness, defaults).
+- Read the **non-diff files** the change depends on. (Frequently the strongest findings come from a file that isn't in the PR at all.)
+
+### Step C — Run the failure-mode checklist
+
+Actively try each item against the change. "Not applicable" is a valid answer, but it must be a *decision*, not an omission.
+
+- **Atomicity / partial failure** — multi-write without a transaction; what state remains if step 2 fails after step 1 committed?
+- **Concurrency / idempotency** — double-submit, retries, races; does the same input twice do the wrong thing?
+- **Malformed / hostile / empty input** — nulls, empty arrays, unexpected types, oversized values.
+- **Error handling** — swallowed exceptions, bare `except`, silent fallbacks that hide failure.
+- **Unbounded growth / resource leaks** — rows/files/connections created without bound or cleanup.
+- **Tenant isolation / authz / data leakage** — can one client see or mint another's data?
+- **Backward compatibility / migrations** — old rows, in-flight requests, rollback safety.
+- **Config / env blast radius** — what happens if a flag/env var is set on the wrong client or environment?
+- **Tests that don't test** — mocks that hide real constraints (e.g. mocking the DB layer so a NOT NULL violation ships green). Ask: would this test fail if the code were wrong?
+
+### Step D — Assign severity and a verdict
+
+Rate each finding, then give a bottom-line verdict.
+
+| Severity | Bar |
+|----------|-----|
+| **Blocking** | Data loss/corruption, security/authz hole, cross-tenant leak, or a crash on a normal path. Must fix before merge. |
+| **High** | Wrong behavior under a plausible (not exotic) condition; missing test for a critical path. |
+| **Medium** | Real problem with a workaround or narrow blast radius; silent-failure modes. |
+| **Low / nit** | Style, naming, doc drift, cosmetic. |
+
+End with one of: **BLOCK** (blocking/high findings open), **APPROVE WITH NITS** (only low findings), or **APPROVE** (nothing material). Never bury the verdict.
 
 ## Input Requirements
 
@@ -348,6 +422,26 @@ Leave `# Reviewer Note` comments on the PR to guide human reviewers through the 
 
 ## Posting Inline PR Comments
 
+The review *reasoning* above is forge-agnostic. Only the mechanics of anchoring a comment to
+a line and POSTing it are forge-specific — pick the backend by where the PR lives:
+
+| Forge | Detect via | Anchor model | How to post |
+|-------|-----------|--------------|-------------|
+| **GitHub** | URL `github.com/...`, or `gh repo view` succeeds | `position` = offset within the diff hunk (see "Calculating Diff Positions") | `gh api repos/<O>/<R>/pulls/<N>/comments` |
+| **Bitbucket Cloud** | URL `bitbucket.org/...`, or remote is `bitbucket.org` | `inline.to` = **actual new-file line number** (no hunk math) | `scripts/bb_post_inline_comments.py` |
+
+For **Bitbucket**, skip the GitHub `position` calculation entirely — build a JSON list of
+`{path, line, body}` (where `line` is the real new-file line) and post it:
+
+```bash
+export BITBUCKET_API_TOKEN=...   # Atlassian API token
+export BITBUCKET_EMAIL=you@company.com
+python3 scripts/bb_post_inline_comments.py -R <workspace>/<repo> --pr <N> --file review.json
+# preview first with --dry-run; reads from stdin if --file is omitted
+```
+
+The GitHub `position`-math instructions below apply to **GitHub only**.
+
 ### Workflow Based on Confidence and Mode
 
 The workflow varies based on confidence level and operation mode:
@@ -574,10 +668,12 @@ When user requests "review and approve" or similar:
 
 **Do NOT automatically approve a PR.** Even if the user says "review and approve", follow this workflow:
 
-1. **Complete the full review** using the tour guide process
+1. **Complete the full review** — use **Adversarial posture** for any approval request
 2. **Assess the PR** for red flags, risks, and correctness
 3. **Present findings** to the user with your confidence assessment
 4. **Ask for user's confidence level** before approving
+
+**Default to NOT approving** on correctness-sensitive changes until the Adversarial failure-mode checklist (Steps A–D above) has been run and every applicable item is dismissed with a stated reason. "I found nothing" is only credible after you have actively tried to break it. If the verdict is BLOCK, do not approve regardless of what the user requested — present the blocking findings instead.
 
 ### Approval Decision Tree
 
@@ -673,7 +769,9 @@ EOF
 - Skip over complex logic
 - Assume reviewer knows the codebase
 - Leave concerns without suggested actions
-- Use scary language like "Risk" - prefer neutral terms like "Consideration"
+- Inflate tone theatrically — keep language neutral and precise
+
+**On severity vs. tone:** keep the *tone* neutral, but do not soften *severity*. In Tour Guide posture, "Consideration" is fine for genuinely minor points. In Adversarial posture, call a data-integrity or security defect exactly what it is (Blocking/High) — downgrading it to a "consideration" is a review failure, not politeness.
 
 ---
 
