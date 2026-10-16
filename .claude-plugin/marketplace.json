@@ -31,6 +31,18 @@
       "source": "./plugins/review-pr",
       "category": "development",
       "homepage": "https://github.com/jontsai/claude-plugins/tree/main/plugins/review-pr"
+    },
+    {
+      "name": "mem-rescue",
+      "description": "Diagnose and fix memory pressure (full swap, crashing browser tabs) in one or two commands. macOS first, Linux best-effort. Agent-agnostic SKILL.md plus two bundled scripts.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Jonathan Tsai",
+        "email": "hello@jontsai.com"
+      },
+      "source": "./plugins/mem-rescue",
+      "category": "productivity",
+      "homepage": "https://github.com/jontsai/claude-plugins/tree/main/plugins/mem-rescue"
     }
   ]
 }

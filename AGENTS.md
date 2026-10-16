@@ -26,6 +26,21 @@ This is a Claude Code plugins marketplace. It contains:
    - Must be object keyed by event name, NOT an array
    - Use `${CLAUDE_PLUGIN_ROOT}` for paths in commands
 
+### Portability
+
+Skills in this repo are used from several coding agents and many machines, so the portable
+unit is `plugins/<name>/skills/<skill>/` and it must stay agent-agnostic:
+
+1. `SKILL.md` and bundled scripts must not name or assume a specific agent (no "Claude",
+   "Codex", `~/.claude/...` paths, or agent-only features). Refer to bundled files relative to
+   the skill directory, e.g. `scripts/foo.sh`.
+2. Anything agent-specific (permission allowlists, hooks, marketplace metadata) lives outside
+   the skill directory: in `.claude-plugin/`, `hooks/`, or as an adapter in `install.sh`.
+3. `install.sh` symlinks skills into each agent's skill directory. To support a new agent, add
+   its parent directory to the detection list there; nothing inside a skill should change.
+4. Scripts should need only bash and python3. If a script is OS-specific, say so in the
+   plugin README and fail clearly on other platforms.
+
 ### Validation
 
 Always run before committing:
