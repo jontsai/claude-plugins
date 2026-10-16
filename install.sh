@@ -51,7 +51,8 @@ for target in "${TARGETS[@]}"; do
   for src in "${SKILLS[@]}"; do
     name="$(basename "$src")"; dst="$target/$name"
     if [ $UNINSTALL -eq 1 ]; then
-      if [ -L "$dst" ]; then run rm "$dst"; echo "  - removed $name"; fi
+      if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then run rm "$dst"; echo "  - removed $name"
+      elif [ -e "$dst" ] || [ -L "$dst" ]; then echo "  x $name is not a link to this checkout; left alone"; fi
       continue
     fi
     if [ -L "$dst" ]; then
@@ -67,12 +68,26 @@ for target in "${TARGETS[@]}"; do
 done
 
 # --- Claude Code adapter: permission allowlist so bundled scripts never prompt -------------
+# Only skills that are (or, in --dry-run, would be) linked from ~/.claude/skills into this
+# checkout get rules: a rule names a path, and that path must resolve to code from this repo.
+CLAUDE_SKILLS="$HOME/.claude/skills"
+linked_here() {  # $1 = skill source dir; true if $CLAUDE_SKILLS/<name> points at it
+  local dst="$CLAUDE_SKILLS/$(basename "$1")"
+  if [ -L "$dst" ]; then [ "$(readlink "$dst")" = "$1" ]
+  elif [ $DRY -eq 1 ]; then [ ! -e "$dst" ] || [ $FORCE -eq 1 ]   # would have been linked above
+  else return 1; fi
+}
 if [ $ALLOW -eq 1 ] && [ $UNINSTALL -eq 0 ]; then
   SETTINGS="$HOME/.claude/settings.json"
   echo "allowlisting scripts in $SETTINGS"
+  case " ${TARGETS[*]} " in *" $CLAUDE_SKILLS "*) ;; *)
+    echo "  x --allow needs $CLAUDE_SKILLS among the install targets; nothing allowlisted"; ALLOW=0;; esac
+fi
+if [ $ALLOW -eq 1 ] && [ $UNINSTALL -eq 0 ]; then
   rules=()
   for src in "${SKILLS[@]}"; do
     name="$(basename "$src")"
+    linked_here "$src" || { echo "  x $name is not linked to this checkout; skipping its rules"; continue; }
     for s in "$src"/scripts/*.sh; do
       [ -f "$s" ] || continue
       base="$(basename "$s")"
@@ -80,7 +95,8 @@ if [ $ALLOW -eq 1 ] && [ $UNINSTALL -eq 0 ]; then
       rules+=("Bash($HOME/.claude/skills/$name/scripts/$base)" "Bash($HOME/.claude/skills/$name/scripts/$base *)")
     done
   done
-  if [ $DRY -eq 1 ]; then printf '  [dry-run] %s\n' "${rules[@]}"
+  if [ ${#rules[@]} -eq 0 ]; then echo "  no rules to add"
+  elif [ $DRY -eq 1 ]; then printf '  [dry-run] %s\n' "${rules[@]}"
   else
     python3 - "$SETTINGS" "${rules[@]}" <<'PY'
 import json, os, sys
