@@ -1,0 +1,9 @@
+{
+  "name": "mem-rescue",
+  "description": "Diagnose and fix memory pressure (full swap, crashing browser tabs) in one or two commands. macOS first, Linux best-effort. Agent-agnostic SKILL.md plus two bundled scripts.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jonathan Tsai",
+    "email": "hello@jontsai.com"
+  }
+}
