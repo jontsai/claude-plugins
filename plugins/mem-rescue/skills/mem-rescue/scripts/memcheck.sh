@@ -139,7 +139,11 @@ leaks = sorted([p for p in procs.values() if p["mem"] >= 1.0 and etime_days(p["e
                key=lambda p: -p["mem"])
 
 demand = phys_used + swap_used
-if (swap_total >= 8 and swap_used > 0.6 * swap_total) or (0 <= free_pct < 20):
+# macOS allocates swapfiles on demand, so swap_total tracks swap_used and used/total is always
+# high there; judge swap against installed RAM instead. Linux swap is a fixed partition/file,
+# so "mostly full" is meaningful on that side only.
+swap_full = OS != "Darwin" and swap_total >= 8 and swap_used > 0.6 * swap_total
+if swap_full or swap_used > 0.5 * ram or (0 <= free_pct < 20):
     verdict = "CRITICAL"
 elif swap_used > 6 or compressor > 0.3 * ram or (0 <= free_pct < 45):
     verdict = "STRAINED"

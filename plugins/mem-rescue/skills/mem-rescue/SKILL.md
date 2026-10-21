@@ -33,9 +33,11 @@ scripts/rescue.sh brave slack             # does it
 scripts/rescue.sh all                     # brave slack notion calendar
 ```
 
-Quits are graceful, so Chromium browsers restore their tabs lazily and Slack/Notion reopen
-where they were. The script never force-kills unless given `--force`, and it reports swap
-before and after.
+Quits are graceful. Chromium browsers are relaunched with `--restore-last-session`, so tabs
+come back as unloaded placeholders whatever the browser's "On startup" setting is; Slack and
+Notion reopen where they were on their own. The script never force-kills unless given
+`--force`; with it, an app that ignores the quit for 45s gets SIGKILL, and if it somehow
+survives that the script says so and does not relaunch it. Swap is reported before and after.
 
 Quitting the user's browser or chat client interrupts their work. Unless the user already
 told you to restart things ("restart brave", "go ahead and rescue it"), show the ranked
@@ -44,7 +46,9 @@ run memcheck again and show the before/after.
 
 ## Reading the report
 
-- **Verdict CRITICAL** means swap is mostly full or free memory is under 20%. New processes
+- **Verdict CRITICAL** means swap use is over half of installed RAM (on Linux, also when the
+  fixed swap is mostly full) or free memory is under 20%. macOS grows swap on demand, so
+  "used / total" is not a signal there and the script does not use it. New processes
   (browser tabs, renderers) fail to launch because the compressor and swap have nowhere to put
   pages. The fix is "shed the biggest app family", not "close a few things".
 - **Demand** is physical used plus swap used. When demand is far above installed RAM, the
